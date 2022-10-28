@@ -13,4 +13,6 @@ type SqlHandler interface {
 	Where(interface{}, interface{}, ...interface{}) *gorm.DB
 	Joins(string, ...interface{}) *gorm.DB
 	Distinct(...interface{}) *gorm.DB
+	Preload(interface{}, string, int) *gorm.DB
+	PreloadAndWhere(interface{}, string, string, ...interface{}) *gorm.DB
 }

@@ -19,6 +19,13 @@ func (repo *FollowRepository) DeleteById(f domain.Follow) (err error) {
 	return
 }
 
+func (repo *FollowRepository) WhereById(query string, id int) (follows domain.Follows, err error) {
+	if err = repo.Where(&follows, query, id).Error; err != nil {
+		return
+	}
+	return
+}
+
 func (repo *FollowRepository) WhereByUserIdAndFollowId(query string, id int, followId int) (follow domain.Follow, err error) {
 	if err = repo.Where(&follow, query, id, followId).Error; err != nil {
 		return

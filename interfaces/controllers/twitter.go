@@ -8,6 +8,7 @@ import (
 	"api/server/usecase"
 	"fmt"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 
@@ -108,6 +109,29 @@ func (controller *TwitterController) DeleteFollow(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, NewError(err))
 	}
 	return c.JSON(http.StatusOK, follow)
+}
+
+func (controller *TwitterController) RelatedPost(c echo.Context) (err error) {
+	timeLine := domain.Posts{}
+
+	loginUser := controller.GetLoginUser(c)
+
+	follows, err := controller.InteractorFollow.SearchFollowByUserId("user_id = ?", loginUser.Id)
+	if err != nil {
+		return err
+	}
+	for _, v := range follows {
+		posts, err := controller.InteractorPost.RelatedByUserId("User", "user_id = ?", v.FollowId)
+		if err != nil {
+			continue
+		}
+		timeLine = append(timeLine, posts...)
+	}
+
+	sort.SliceStable(timeLine, func(i, j int) bool {
+		return timeLine[i].CreatedAt > timeLine[j].CreatedAt
+	})
+	return c.JSON(http.StatusOK, timeLine)
 }
 
 func (controller *TwitterController) GetLoginUser(c echo.Context) (loginuser domain.LoginUser) {
