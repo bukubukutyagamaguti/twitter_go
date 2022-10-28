@@ -6,4 +6,5 @@ type FollowRepository interface {
 	Update(domain.Follow) (domain.Follow, error)
 	DeleteById(domain.Follow) error
 	WhereByUserIdAndFollowId(string, int, int) (domain.Follow, error)
+	WhereById(string, int) (domain.Follows, error)
 }

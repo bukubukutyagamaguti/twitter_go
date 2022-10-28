@@ -34,6 +34,7 @@ func Init() {
 	api.POST("/post", func(c echo.Context) error { return twitterController.CreatePost(c) })
 	api.POST("/follow/:id", func(c echo.Context) error { return twitterController.CreateFollow(c) })
 	api.POST("/refollow/:id", func(c echo.Context) error { return twitterController.DeleteFollow(c) })
+	api.GET("/home", func(c echo.Context) error { return twitterController.RelatedPost(c) })
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

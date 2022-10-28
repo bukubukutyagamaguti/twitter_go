@@ -22,3 +22,8 @@ func (interactor *FollowInteractor) SearchByFollowIdAndUserId(query string, user
 	follow, err = interactor.FollowRepository.WhereByUserIdAndFollowId(query, userId, followId)
 	return
 }
+
+func (interactor *FollowInteractor) SearchFollowByUserId(query string, id int) (follows domain.Follows, err error) {
+	follows, err = interactor.FollowRepository.WhereById(query, id)
+	return
+}
