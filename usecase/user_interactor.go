@@ -7,6 +7,7 @@ import (
 
 type UserInteractor struct {
 	UserRepository UserRepository
+	Tokenizer      token.Tokenizer
 }
 
 func (interactor *UserInteractor) UserById(id int) (user domain.User, err error) {
@@ -32,4 +33,23 @@ func (interactor *UserInteractor) Update(u domain.User) (user domain.User, err e
 func (interactor *UserInteractor) DeleteById(u domain.User) (err error) {
 	err = interactor.UserRepository.DeleteById(u)
 	return
+}
+
+func (interactor *UserInteractor) Login(login domain.LoginUser) (domain.User, domain.Token, error) {
+	var token domain.Token
+	user, err := interactor.UserRepository.FindById(login.Id)
+	if err != nil {
+		return user, token, err
+	}
+
+	if user.Password != login.Password {
+		return user, token, err
+	}
+
+	token, err = interactor.Tokenizer.New(user)
+	if err != nil {
+		return user, token, err
+	}
+
+	return user, token, nil
 }
