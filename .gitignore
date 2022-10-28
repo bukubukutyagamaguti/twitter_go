@@ -13,3 +13,14 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+_main.go
+main
+server
+go.sum
+.env
+.air.toml
+.vscode
+
+log/*
+!.gitkeep
