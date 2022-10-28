@@ -18,18 +18,22 @@ type UserController struct {
 
 func NewUserController(
 	SqlHandler database.SqlHandler,
+	tokenHandler token.TokenHandler,
 ) *UserController {
 	return &UserController{
 		Interactor: usecase.UserInteractor{
 			UserRepository: &database.UserRepository{
 				SqlHandler: SqlHandler,
 			},
+			Tokenizer: &token.TokenizerImpl{
+				TokenHandler: tokenHandler,
+			},
 		},
 	}
 }
 
 func (controller *UserController) Show(c echo.Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	loginuser := controller.GetLoginUser(c)
 	user, err := controller.Interactor.UserById(loginuser.Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, NewError(err))
@@ -75,4 +79,26 @@ func (controller *UserController) Delete(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, NewError(err))
 	}
 	return c.JSON(http.StatusOK, user)
+}
+
+func (controller *UserController) Login(c echo.Context) (err error) {
+	loginuser := domain.LoginUser{}
+	if err := c.Bind(&loginuser); err != nil {
+		return c.JSON(http.StatusInternalServerError, NewError(err))
+	}
+	user, token, err := controller.Interactor.Login(loginuser)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{"user": user, "token": token})
+}
+
+func (controller *UserController) GetLoginUser(c echo.Context) (loginuser domain.LoginUser) {
+	currentUser := c.Get("user").(*jwt.Token)
+	claims := currentUser.Claims.(jwt.MapClaims)
+	id := claims["uid"].(float64)
+	userName := claims["name"].(string)
+	loginuser = domain.LoginUser{Id: int(id), Name: userName}
+	return
 }
