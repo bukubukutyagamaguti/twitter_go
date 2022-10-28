@@ -17,7 +17,7 @@ func Init() {
 	}
 
 	// controllers
-	twitterController := controllers.NewUserController(NewSqlHandler(), NewTokenHandler())
+	twitterController := controllers.NewTwitterController(NewSqlHandler(), NewTokenHandler())
 
 	// Middleware
 	e.Use(middleware.Logger())
