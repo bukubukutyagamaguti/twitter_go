@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"api/server/config"
 	"api/server/domain"
 	"api/server/interfaces/database"
 	"api/server/interfaces/token"
 	"api/server/usecase"
 	"net/http"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -13,6 +15,7 @@ import (
 
 type TwitterController struct {
 	InteractorUser usecase.UserInteractor
+	InteractorPost usecase.PostInteractor
 }
 
 func NewTwitterController(
@@ -26,6 +29,11 @@ func NewTwitterController(
 			},
 			Tokenizer: &token.TokenizerImpl{
 				TokenHandler: tokenHandler,
+			},
+		},
+		InteractorPost: usecase.PostInteractor{
+			PostRepository: &database.PostRepository{
+				SqlHandler: SqlHandler,
 			},
 		},
 	}
@@ -42,6 +50,20 @@ func (controller *TwitterController) Login(c echo.Context) (err error) {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{"user": user, "token": token})
+}
+
+func (controller *TwitterController) CreatePost(c echo.Context) (err error) {
+	loginUser := controller.GetLoginUser(c)
+	p := domain.Post{
+		UserId:    loginUser.Id,
+		CreatedAt: time.Now().Format(config.TimeFormat),
+	}
+	c.Bind(&p)
+	post, err := controller.InteractorPost.Add(p)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, NewError(err))
+	}
+	return c.JSON(http.StatusCreated, post)
 }
 
 func (controller *TwitterController) GetLoginUser(c echo.Context) (loginuser domain.LoginUser) {

@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"api/server/interfaces/controllers"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
@@ -24,6 +25,13 @@ func Init() {
 	e.Use(middleware.Recover())
 	// Route "/"
 	e.POST("/login", func(c echo.Context) error { return twitterController.Login(c) })
+
+	// Route "/api"
+	api := e.Group("/api")
+	api.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey: []byte(os.Getenv("SECRET_KEY")),
+	}))
+	api.POST("/post", func(c echo.Context) error { return twitterController.CreatePost(c) })
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
