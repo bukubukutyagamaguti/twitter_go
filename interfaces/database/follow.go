@@ -25,3 +25,10 @@ func (repo *FollowRepository) WhereByUserIdAndFollowId(query string, id int, fol
 	}
 	return
 }
+
+func (repo *FollowRepository) WhereById(query string, id int) (follows domain.Follows, err error) {
+	if err = repo.Where(&follows, query, id).Error; err != nil {
+		return
+	}
+	return
+}

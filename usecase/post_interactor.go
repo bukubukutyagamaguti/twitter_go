@@ -12,3 +12,8 @@ func (interactor *PostInteractor) Add(u domain.Post) (post domain.Post, err erro
 	post, err = interactor.PostRepository.Store(u)
 	return
 }
+
+func (interactor *PostInteractor) RelatedByUserId(table string, query string, id int) (posts domain.Posts, err error) {
+	posts, err = interactor.PostRepository.Related(table, query, id)
+	return
+}

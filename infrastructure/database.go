@@ -77,3 +77,6 @@ func (handler *SQLHndoler) Joins(query string, args ...interface{}) *gorm.DB {
 func (handler *SQLHndoler) Distinct(query ...interface{}) *gorm.DB {
 	return handler.Conn.Distinct(query)
 }
+func (handler *SQLHndoler) PreloadAndWhere(out interface{}, table string, query string, args ...interface{}) *gorm.DB {
+	return handler.Conn.Preload(table).Where(query, args...).Find(out)
+}
