@@ -16,6 +16,7 @@ type User struct {
 
 type LoginUser struct {
 	Id       int    `json:"id" param:"id" gorm:"primaryKey"`
-	Name     string `json:"name" validate:"required"`
+	Email    string `json:"email" validate:"required"`
+	Name     string `json:"name"`
 	Password string `json:"password" validate:"required,password"`
 }
