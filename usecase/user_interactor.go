@@ -37,12 +37,12 @@ func (interactor *UserInteractor) DeleteById(u domain.User) (err error) {
 
 func (interactor *UserInteractor) Login(login domain.LoginUser) (domain.User, domain.Token, error) {
 	var token domain.Token
-	user, err := interactor.UserRepository.FindById(login.Id)
+	user, err := interactor.UserRepository.WhereByEmail(login.Email)
 	if err != nil {
 		return user, token, err
 	}
 
-	if user.Password != login.Password {
+	if user.Password != login.Password || user.Email != login.Email {
 		return user, token, err
 	}
 

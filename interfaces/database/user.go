@@ -14,6 +14,12 @@ func (repo *UserRepository) FindById(id int) (user domain.User, err error) {
 	}
 	return
 }
+func (repo *UserRepository) WhereByEmail(email string) (user domain.User, err error) {
+	if err = repo.Where(&user, "email = ?", email).Error; err != nil {
+		return
+	}
+	return
+}
 func (repo *UserRepository) FindAll() (users domain.Users, err error) {
 	if err = repo.Find(&users).Error; err != nil {
 		return
