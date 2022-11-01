@@ -2,49 +2,103 @@
 
 技術課題であるTwitterクローンを作成し提出
 
-## ディレクトリ構成
+## Overview
 
-クリーンアーキテクチャに則って作成
+クリーンアーキテクチャに則って作成  
+![クリーンアーキテクチャ](./CleanArchitecture.jpg)
+
+## Development
+
+### Setup
+
+ローカルでのセットアップに関しては、このdockerを使用し下記コマンドを実施する
+```
+// front側とback側のgitをcloneしてくる
+git clone git@github.com:Kaminashi-Inc/ENG-1009_bukubukutyagamaguti.git ./dev/back
+
+cp ./dev/back/.env.example ./dev/back/.env
+
+git clone git@github.com:Kaminashi-Inc/ENG-1009_bukubukutyagamaguti.git ./dev/front
+cp ./dev/front/.env.example ./dev/front/.env
+
+make init
+```
+これでローカルで開発環境が立ち上がる。  
+アクセスは、[http://127.0.0.6:8000](http://127.0.0.6:8000)にて行う  
+フロントサイドの開発は、[http://127.0.0.6:8081](http://127.0.0.6:8081)にて描写  
+サーバーサイドの開発は、[http://127.0.0.6:8080](http://127.0.0.6:8080)にて描写
+
+### Test
+
+テストコードは実装していないので後々対応する
+
+## Production
+
+動きを大雑把に説明
+
+### Deploy
+
+デプロイ方法説明
+
+## Notes
+
+その他
+
+
+
+
+## 工夫した点
+
+今回のGoの実装に関して工夫した点を記載しています。
+
+### 
+
+### 単一責任
+
+データベースへの処理  
+トークンへの処理  
+などのミドルウェアごとに処理をまとめるように行いできるだけ  
+コードの拡張の際に処理を行うディレクトリに迷わないように行いました。  
+
+### ディレクトリ構成
+
+クリーンアーキテクチャに則って作成  
 参考記事[こちら](https://qiita.com/hirotakan/items/698c1f5773a3cca6193e)
 
-### Adapters
+#### Interfaces
 
 このディレクトリでは外部との通信するための処理を実装
 
-#### Controllers
+##### Controllers
 
-Infrastructuresで受けたリクエストを受け取ります。
+interfacesで受けたリクエストを受け取ります。  
 リクエストを受け取ったあとにinteractorになげるための初期化も行う
 
-#### Gateways
+#### Database 
 
-外部ツールとつなぐためのinterface
-基本的には、interfaceの定義とinterfaceを介して外部のメソッドを実行する処理を定義します。
+interfacesで受けたリクエストをもとに処理をinteractorに流す際  
+にデータベースへの処理をinfrastructuresつなげる役割  
 
-#### Presenter
-
-外部にアウトプットする際にデータをフォーマットしています
-
-### Infrastructures
+#### Infrastructures
 
 このディレクトリではアプリケーション外部へ通信するための処理を実装
 
-#### routes
+##### Routes
 ルーティングを行います。
 
-#### database
+##### Database
 データベースへのアクセスするための初期化設定
 
-### Usecases
-EntitiesやGatewaysを呼ぶ処理を実装
-所謂サービスと似たような役割にて考慮
-あえてEntity毎にディレクトリを分けています。
-すべてのUsecaseを呼ぶのではなく、必要なUsecaseのみ呼べるようにしたいからこのように作成しています。
+#### UseCases
 
-### Entities
+domainやdatabaseを呼ぶ処理を実装  
+所謂サービスと似たような役割にて考慮してあえて命名によりにファイルを分けています。  
+すべてのUsecaseを呼ぶのではなく、  
+必要なUsecaseのみ呼べるようにしたいからこのように作成しています。  
+
+#### Domain
+
 ドメインロジックを実装
-
-## 工夫した点
 
 ## 苦労した点
 
