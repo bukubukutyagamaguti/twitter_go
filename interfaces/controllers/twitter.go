@@ -1,16 +1,13 @@
 package controllers
 
 import (
-	"api/server/config"
 	"api/server/domain"
 	"api/server/interfaces/database"
 	"api/server/interfaces/token"
 	"api/server/usecase"
-	"fmt"
 	"net/http"
 	"sort"
 	"strconv"
-	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -87,10 +84,8 @@ func (controller *TwitterController) RelatedPost(c echo.Context) (err error) {
 
 func (controller *TwitterController) CreatePost(c echo.Context) (err error) {
 	loginUser := controller.GetLoginUser(c)
-	p := domain.Post{
-		UserId:    loginUser.Id,
-		CreatedAt: time.Now().Format(config.TimeFormat),
-	}
+	p := domain.NewPost()
+	p.UserId = loginUser.Id
 	c.Bind(&p)
 	post, err := controller.InteractorPost.Add(p)
 	if err != nil {
@@ -105,18 +100,13 @@ func (controller *TwitterController) CreateFollow(c echo.Context) (err error) {
 	f := domain.Follow{}
 	f, _ = controller.InteractorFollow.SearchByFollowIdAndUserId("user_id = ? And follow_id = ?", loginUser.Id, id)
 	if f.Id == 0 {
-		f = domain.Follow{
-			UserId:    loginUser.Id,
-			FollowId:  id,
-			DeletedAt: gorm.DeletedAt{},
-			CreatedAt: time.Now().Format(config.TimeFormat),
-		}
+		f = domain.NewFollow()
+		f.UserId = loginUser.Id
+		f.FollowId = id
 	} else {
 		f.DeletedAt = gorm.DeletedAt{}
 	}
 	follow, err := controller.InteractorFollow.Update(f)
-	fmt.Println(f)
-	fmt.Println(loginUser)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, NewError(err))
 	}
