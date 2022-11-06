@@ -1,3 +1,4 @@
+//go:generate mockgen -source=user_repository.go -destination=./mock/user.go
 package usecase
 
 import "api/server/domain"

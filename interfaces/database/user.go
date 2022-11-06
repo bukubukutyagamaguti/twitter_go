@@ -26,12 +26,6 @@ func (repo *UserRepository) FindAll() (users domain.Users, err error) {
 	}
 	return
 }
-func (repo *UserRepository) Related(id int) (users domain.Users, err error) {
-	if err = repo.Joins("follows").Find(&users).Error; err != nil {
-		return
-	}
-	return
-}
 func (repo *UserRepository) Store(u domain.User) (user domain.User, err error) {
 	if err = repo.Create(&u).Error; err != nil {
 		return

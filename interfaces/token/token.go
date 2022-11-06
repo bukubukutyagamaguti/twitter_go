@@ -1,3 +1,4 @@
+//go:generate mockgen -source=token.go -package=mock_token -destination=./mock/token.go
 package token
 
 import "api/server/domain"
@@ -9,6 +10,12 @@ type Tokenizer interface {
 
 type TokenizerImpl struct {
 	TokenHandler
+}
+
+func NewTokenizerImpl(tokenHandler TokenHandler) *TokenizerImpl {
+	return &TokenizerImpl{
+		TokenHandler: tokenHandler,
+	}
 }
 
 func (tokenizer *TokenizerImpl) New(user domain.User) (domain.Token, error) {

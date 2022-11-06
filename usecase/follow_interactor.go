@@ -8,6 +8,14 @@ type FollowInteractor struct {
 	FollowRepository FollowRepository
 }
 
+func NewFollowInteractor(
+	FollowRepository FollowRepository,
+) *FollowInteractor {
+	return &FollowInteractor{
+		FollowRepository: FollowRepository,
+	}
+}
+
 func (interactor *FollowInteractor) Update(u domain.Follow) (follow domain.Follow, err error) {
 	follow, err = interactor.FollowRepository.Update(u)
 	return

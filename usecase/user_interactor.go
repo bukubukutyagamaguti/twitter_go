@@ -5,9 +5,28 @@ import (
 	"api/server/interfaces/token"
 )
 
+type UserInteractorInterface interface {
+	UserById(int) (domain.User, error)
+	Users() (domain.Users, error)
+	Add(domain.User) (domain.User, error)
+	Update(domain.User) (domain.User, error)
+	DeleteById(domain.User) error
+	Login(domain.LoginUser) (domain.User, domain.Token, error)
+}
+
 type UserInteractor struct {
 	UserRepository UserRepository
 	Tokenizer      token.Tokenizer
+}
+
+func NewUserInteractor(
+	UserRepository UserRepository,
+	Tokenizer token.Tokenizer,
+) *UserInteractor {
+	return &UserInteractor{
+		UserRepository: UserRepository,
+		Tokenizer:      Tokenizer,
+	}
 }
 
 func (interactor *UserInteractor) UserById(id int) (user domain.User, err error) {
