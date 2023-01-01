@@ -7,8 +7,6 @@
 クリーンアーキテクチャに則って作成  
 ![クリーンアーキテクチャ](./CleanArchitecture.jpg)
 
-## Development
-
 ### Setup
 
 ローカルでのセットアップに関しては、このdockerを使用し下記コマンドを実施する
@@ -18,7 +16,7 @@ git clone git@github.com:Kaminashi-Inc/ENG-1009_bukubukutyagamaguti.git ./dev/ba
 
 cp ./dev/back/.env.example ./dev/back/.env
 
-git clone git@github.com:Kaminashi-Inc/ENG-1009_bukubukutyagamaguti.git ./dev/front
+git clone git@github.com:bukubukutyagamaguti/vue_front.git
 cp ./dev/front/.env.example ./dev/front/.env
 
 make init
@@ -30,28 +28,29 @@ make init
 
 ### Test
 
-テストコードは実装していないので後々対応する
+テストコードはinterface層とinfra層での導入ができていないので今後対応予定
 
 ## Production
 
-動きを大雑把に説明
+基本機能の流れ
+1. Loginする
+- EmailとPasswordを使用する
+- post通信にて対応  
 
-### Deploy
+2. Token発行(JWT)
+- Login時に発行する
+- Tokenには、UserIDとUserNameが入っている
 
-デプロイ方法説明
+3. Tokenを使用してuser情報等を取得
+- ツイートやフォロー等の処理でIDを使用する
 
 ## Notes
 
 その他
 
-
-
-
 ## 工夫した点
 
-今回のGoの実装に関して工夫した点を記載しています。
-
-### 
+今回のGoの実装に関して工夫した点を記載しています。 
 
 ### 単一責任
 
@@ -102,4 +101,32 @@ domainやdatabaseを呼ぶ処理を実装
 
 ## 苦労した点
 
+今回は、基本初めてのことばかりでした。  
+クリーンアーキテクチャを使用したディレクトリ構成  
+Golangやフレームワークのechoの使用  
+JWTを使用したトークン発行
+vueを使用したSPA  
+などなどの初めてのことが多い実装でした。  
+
+ただ改めてこのような実装をしていくことによって自分の知識が増えていく楽しさや実装していく楽しさを感じることができました。  
+正直まだ実装したいことややりたいことも多いので今後もこの開発を行っていき自分の知識のアップデートをしていこうと思います。
+
+今回は間に合わないと思う実装は今後やる予定です。  
+全文検索エンジンの開発  
+認証認可周りの実装  
+JWT以外のToken発行のスキーム  
+controller、database、token周りのテストコード
+
 ## 未実装の点
+
+軽め
+投稿の削除
+ユーザのプロフィール
+ユーザの設定
+ユーザ一覧
+
+重め
+投稿またはユーザの検索
+認証認可周りの実装
+API用のToken発行システム
+interface、infra層でのテストコード作成

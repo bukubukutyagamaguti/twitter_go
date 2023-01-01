@@ -50,15 +50,6 @@ func NewSqlHandler() *SQLHndoler {
 func (handler *SQLHndoler) Find(out interface{}, where ...interface{}) *gorm.DB {
 	return handler.Conn.Find(out, where...)
 }
-func (handler *SQLHndoler) Exec(sql string, values ...interface{}) *gorm.DB {
-	return handler.Conn.Exec(sql, values...)
-}
-func (handler *SQLHndoler) First(out interface{}, where ...interface{}) *gorm.DB {
-	return handler.Conn.First(out, where...)
-}
-func (handler *SQLHndoler) Raw(sql string, values ...interface{}) *gorm.DB {
-	return handler.Conn.Raw(sql, values...)
-}
 func (handler *SQLHndoler) Create(value interface{}) *gorm.DB {
 	return handler.Conn.Create(value)
 }
@@ -70,12 +61,6 @@ func (handler *SQLHndoler) Delete(value interface{}) *gorm.DB {
 }
 func (handler *SQLHndoler) Where(out interface{}, query interface{}, args ...interface{}) *gorm.DB {
 	return handler.Conn.Where(query, args...).Find(out)
-}
-func (handler *SQLHndoler) Joins(query string, args ...interface{}) *gorm.DB {
-	return handler.Conn.Joins(query, args)
-}
-func (handler *SQLHndoler) Distinct(query ...interface{}) *gorm.DB {
-	return handler.Conn.Distinct(query)
 }
 func (handler *SQLHndoler) PreloadAndWhere(out interface{}, table string, query string, args ...interface{}) *gorm.DB {
 	return handler.Conn.Preload(table).Where(query, args...).Find(out)
